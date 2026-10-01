@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10월 우리 반 마음건강 출석부</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans KR -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti Effect -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #fafafa;
+      color: #262626;
+    }
+    
+    /* 인스타그램 스타일 카드 Soft Shadow */
+    .insta-card {
+      background: #ffffff;
+      border: 1px solid #dbdbdb;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+      border-radius: 20px;
+    }
+
+    /* 인스타그램 그라데이션 버튼 */
+    .insta-btn-gradient {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      transition: all 0.2s ease-in-out;
+    }
+    .insta-btn-gradient:hover:not(:disabled) {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(220, 39, 67, 0.35);
+    }
+    .insta-btn-gradient:disabled {
+      background: #c0c0c0;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* 애니메이션 트랜지션 */
+    .fade-in {
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .shake {
+      animation: shakeAnim 0.4s ease-in-out;
+    }
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-6">
+
+  <!-- 상단 헤더 -->
+  <header class="w-full max-w-md mx-auto mb-5 flex items-center justify-between px-2 pt-2">
+    <div class="flex items-center space-x-2">
+      <div class="w-9 h-9 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 flex items-center justify-center">
+        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+          <i class="fa-solid font-bold text-rose-500 text-lg fa-heart"></i>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-purple-600">
+          마음건강 출석부
+        </h1>
+        <p class="text-xs text-gray-400 font-medium">10월 우리 반 따뜻한 등교 확인</p>
+      </div>
+    </div>
+    <span class="text-xs font-semibold px-2.5 py-1 bg-rose-50 text-rose-600 rounded-full border border-rose-100">
+      🍂 10월
+    </span>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="w-full max-w-md mx-auto relative">
+
+    <!-- [1단계] 학번/이름/비밀번호 인증 카드 -->
+    <section id="step-auth" class="insta-card p-6 fade-in space-y-5">
+      <div class="text-center pb-2 border-b border-gray-100">
+        <span class="text-xs font-bold uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-md">STEP 1</span>
+        <h2 class="text-lg font-bold text-gray-800 mt-2">학생 본인 확인 & 등교 암호</h2>
+        <p class="text-xs text-gray-500 mt-1">학번과 이름을 입력하고 등교 암호를 확인해주세요.</p>
+      </div>
+
+      <!-- 학번 선택 -->
+      <div>
+        <label for="student-id" class="block text-xs font-bold text-gray-700 mb-1">학번 선택</label>
+        <div class="relative">
+          <select id="student-id" class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm rounded-xl p-3 appearance-none focus:outline-none focus:ring-2 focus:ring-rose-400 focus:bg-white transition-all">
+            <option value="" disabled selected>학번을 선택하세요</option>
+            <!-- JS로 21001 ~ 21033 자동 생성 -->
+          </select>
+          <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-gray-400 pointer-events-none text-xs"></i>
+        </div>
+      </div>
+
+      <!-- 이름 입력 -->
+      <div>
+        <label for="student-name" class="block text-xs font-bold text-gray-700 mb-1">이름</label>
+        <input type="text" id="student-name" placeholder="이름을 입력하세요 (예: 홍길동)"
+               class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:bg-white transition-all">
+      </div>
+
+      <!-- 등교 암호 입력 -->
+      <div>
+        <label for="auth-password" class="block text-xs font-bold text-gray-700 mb-1">오늘의 등교 암호</label>
+        <div class="relative">
+          <input type="password" id="auth-password" placeholder="선생님이 안내한 암호 입력"
+                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:bg-white transition-all">
+          <i class="fa-solid fa-lock absolute right-3 top-3.5 text-gray-400 text-sm"></i>
+        </div>
+      </div>
+
+      <!-- 에러 메시지 상자 -->
+      <div id="auth-error" class="hidden p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl flex items-center space-x-2">
+        <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+        <span id="auth-error-text">암호가 올바르지 않습니다. 다시 확인해주세요.</span>
+      </div>
+
+      <!-- 비밀번호 확인 버튼 -->
+      <button type="button" id="btn-verify-pass" onclick="handlePasswordVerify()"
+              class="w-full py-3.5 px-4 text-white text-sm font-bold rounded-xl insta-btn-gradient shadow-md flex items-center justify-center space-x-2">
+        <span id="btn-verify-text">비밀번호 확인 및 다음</span>
+        <i id="btn-verify-spinner" class="fa-solid fa-spinner fa-spin hidden"></i>
+      </button>
+
+      <!-- 제작자 정보 -->
+      <div class="pt-2 text-center border-t border-gray-100 mt-2">
+        <span class="text-[11px] text-gray-400 font-medium">제작자 : 교사 허인선</span>
+      </div>
+    </section>
+
+    <!-- [2단계] 마음건강 출석부 작성 카드 -->
+    <section id="step-form" class="insta-card p-6 fade-in space-y-6 hidden">
+      <!-- 헤더 유저 인포 -->
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 p-[2px]">
+            <div class="w-full h-full bg-white rounded-full flex items-center justify-center font-bold text-rose-500 text-sm" id="user-avatar-initial">
+              홍
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-gray-400" id="display-student-id">21001</div>
+            <div class="text-sm font-bold text-gray-800" id="display-student-name">홍길동</div>
+          </div>
+        </div>
+        <button onclick="resetToStep1()" class="text-xs text-gray-400 hover:text-gray-600 underline">
+          정보 변경
+        </button>
+      </div>
+
+      <!-- 1. 오늘의 마음 온도 & 기분 아이콘 -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-gray-800 flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>
+            <span>1. 오늘의 마음 온도 & 기분 아이콘</span>
+          </label>
+          <span id="temp-display-val" class="text-sm font-extrabold text-rose-500 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-100">
+            36.5°C
+          </span>
+        </div>
+
+        <!-- 마음 온도 슬라이더 -->
+        <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-100 space-y-2">
+          <input type="range" id="mind-temp" min="0" max="100" value="36.5" step="0.5"
+                 oninput="updateTempDisplay(this.value)"
+                 class="w-full accent-rose-500 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+          <div class="flex justify-between text-[10px] text-gray-400 font-medium">
+            <span>❄️ 차가움 (0°C)</span>
+            <span>🌿 따뜻함 (36.5°C)</span>
+            <span>🔥 뜨거움 (100°C)</span>
+          </div>
+        </div>
+
+        <!-- 기분 아이콘 선택 (단일 선택) -->
+        <div class="grid grid-cols-5 gap-2 pt-1">
+          <button type="button" onclick="selectMood(this, '😊 행복')" class="mood-btn p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-center hover:bg-rose-50 transition-all focus:outline-none active:scale-95">
+            <div class="text-2xl">😊</div>
+            <div class="text-[10px] text-gray-600 mt-1 font-medium">행복</div>
+          </button>
+          <button type="button" onclick="selectMood(this, '😌 평온')" class="mood-btn p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-center hover:bg-rose-50 transition-all focus:outline-none active:scale-95">
+            <div class="text-2xl">😌</div>
+            <div class="text-[10px] text-gray-600 mt-1 font-medium">평온</div>
+          </button>
+          <button type="button" onclick="selectMood(this, '🥺 우울')" class="mood-btn p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-center hover:bg-rose-50 transition-all focus:outline-none active:scale-95">
+            <div class="text-2xl">🥺</div>
+            <div class="text-[10px] text-gray-600 mt-1 font-medium">우울</div>
+          </button>
+          <button type="button" onclick="selectMood(this, '😡 스트레스')" class="mood-btn p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-center hover:bg-rose-50 transition-all focus:outline-none active:scale-95">
+            <div class="text-2xl">😡</div>
+            <div class="text-[10px] text-gray-600 mt-1 font-medium">스트레스</div>
+          </button>
+          <button type="button" onclick="selectMood(this, '😴 피곤')" class="mood-btn p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-center hover:bg-rose-50 transition-all focus:outline-none active:scale-95">
+            <div class="text-2xl">😴</div>
+            <div class="text-[10px] text-gray-600 mt-1 font-medium">피곤</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. 오늘의 감사 대상 선택 -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-gray-800 flex items-center space-x-1.5">
+          <span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>
+          <span>2. 오늘의 감사 대상 선택 (1개 선택)</span>
+        </label>
+
+        <div class="flex flex-wrap gap-1.5 pt-1" id="target-pill-group">
+          <button type="button" onclick="selectTarget(this, '친구')" class="target-btn px-3 py-2 bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl hover:bg-purple-50 transition-all">
+            🤝 친구
+          </button>
+          <button type="button" onclick="selectTarget(this, '선생님/학교')" class="target-btn px-3 py-2 bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl hover:bg-purple-50 transition-all">
+            🏫 선생님/학교
+          </button>
+          <button type="button" onclick="selectTarget(this, '가족')" class="target-btn px-3 py-2 bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl hover:bg-purple-50 transition-all">
+            🏡 가족
+          </button>
+          <button type="button" onclick="selectTarget(this, '나 자신')" class="target-btn px-3 py-2 bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl hover:bg-purple-50 transition-all">
+            ✨ 나 자신
+          </button>
+          <button type="button" onclick="selectTarget(this, '오늘의 날씨/환경')" class="target-btn px-3 py-2 bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 rounded-xl hover:bg-purple-50 transition-all">
+            ☀️ 날씨/환경
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. 5글자 감사 한마디 (필수) -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-gray-800 flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+            <span>3. 5글자 감사 한마디 <span class="text-red-500">*필수</span></span>
+          </label>
+          <!-- 글자수 카운터 및 검증 태그 -->
+          <span id="char-count-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
+            0 / 5글자
+          </span>
+        </div>
+
+        <div class="relative">
+          <input type="text" id="five-words-input" placeholder="정확히 5글자로 적어주세요" maxlength="10"
+                 oninput="validateFiveWords(this.value)"
+                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm font-semibold rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all">
+        </div>
+
+        <!-- 5글자 검증 안내 문구 -->
+        <p id="five-words-hint" class="text-xs text-rose-500 font-medium">
+          ⚠️ 공백 포함 정확히 5글자를 입력해야 [등교하기] 버튼이 활성화됩니다.
+        </p>
+
+        <!-- 예시 단어 칩 -->
+        <div class="pt-1 space-y-1">
+          <span class="text-[11px] text-gray-400">💡 예시 추천 (클릭 시 입력):</span>
+          <div class="flex flex-wrap gap-1">
+            <button type="button" onclick="applyExample('웃어줘 고마')" class="text-[11px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md border border-amber-200 hover:bg-amber-100">"웃어줘 고마"</button>
+            <button type="button" onclick="applyExample('오늘도 힘내')" class="text-[11px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md border border-amber-200 hover:bg-amber-100">"오늘도 힘내"</button>
+            <button type="button" onclick="applyExample('따뜻한 햇살')" class="text-[11px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md border border-amber-200 hover:bg-amber-100">"따뜻한 햇살"</button>
+            <button type="button" onclick="applyExample('포기 안한 나')" class="text-[11px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md border border-amber-200 hover:bg-amber-100">"포기 안한 나"</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 마음 우체통 (선택) -->
+      <div class="space-y-2 pt-2 border-t border-gray-100">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-gray-800 flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+            <span>4. 마음 우체통 <span class="text-gray-400 font-normal">(선택 항목)</span></span>
+          </label>
+          <span class="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full font-medium">
+            🔒 교사 확인 후 전달
+          </span>
+        </div>
+
+        <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-100 space-y-2.5">
+          <div>
+            <label for="mailbox-receiver" class="block text-[11px] font-bold text-gray-600 mb-1">고마운 상대 선택</label>
+            <select id="mailbox-receiver" class="w-full bg-white border border-gray-200 text-gray-800 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+              <option value="" disabled selected>고마운 상대 선택 (친구 또는 담임선생님)</option>
+              <!-- JS로 담임선생님 및 21001 ~ 21033 친구 목록 자동 구성 -->
+            </select>
+          </div>
+
+          <div>
+            <label for="mailbox-message" class="block text-[11px] font-bold text-gray-600 mb-1">비밀 마음 메시지</label>
+            <textarea id="mailbox-message" rows="2" placeholder="친구에게 전하고 싶은 따뜻한 말을 남겨보세요."
+                      class="w-full bg-white border border-gray-200 text-gray-800 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 제출 버튼 -->
+      <div class="pt-2">
+        <button type="button" id="btn-submit-attendance" disabled onclick="submitAttendance()"
+                class="w-full py-3.5 px-4 text-white text-sm font-bold rounded-xl insta-btn-gradient shadow-md flex items-center justify-center space-x-2">
+          <span id="btn-submit-text">등교하기 ✨</span>
+          <i id="btn-submit-spinner" class="fa-solid fa-spinner fa-spin hidden"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- [3단계] 등교 완료 결과 화면 -->
+    <section id="step-success" class="insta-card p-6 fade-in space-y-5 text-center hidden">
+      <div class="w-16 h-16 bg-gradient-to-tr from-green-400 to-emerald-500 text-white rounded-full flex items-center justify-center mx-auto shadow-lg text-2xl">
+        <i class="fa-solid fa-check"></i>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">등교 확인 완료! 🎉</h2>
+        <p class="text-xs text-gray-500 mt-1">오늘 하루도 마음 건강하고 행복하게 보내세요!</p>
+      </div>
+
+      <!-- 요약 정보 카드 -->
+      <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 text-left space-y-2 text-xs text-gray-700">
+        <div class="flex justify-between border-b border-gray-200 pb-2">
+          <span class="text-gray-400">학생 정보</span>
+          <span id="summary-student" class="font-bold">21001 홍길동</span>
+        </div>
+        <div class="flex justify-between border-b border-gray-200 pb-2">
+          <span class="text-gray-400">마음 온도 / 기분</span>
+          <span id="summary-mood" class="font-bold text-rose-500">36.5°C 😊 행복</span>
+        </div>
+        <div class="flex justify-between border-b border-gray-200 pb-2">
+          <span class="text-gray-400">감사 대상</span>
+          <span id="summary-target" class="font-bold">🤝 친구</span>
+        </div>
+        <div class="flex justify-between border-b border-gray-200 pb-2">
+          <span class="text-gray-400">5글자 감사</span>
+          <span id="summary-fivewords" class="font-bold text-amber-600">"웃어줘 고마"</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">등교 시각</span>
+          <span id="summary-time" class="font-bold text-purple-600">-</span>
+        </div>
+      </div>
+
+      <button onclick="resetApp()" class="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition-all">
+        다른 학생 등교하기
+      </button>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // [설정] 구글 앱스 스크립트 웹 앱 배포 URL
+    // 배포 후 아래 큰따옴표 안에 웹 앱 URL을 붙여넣으세요.
+    // 예: const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
+    // =========================================================================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzDW-yGZg0d5QUJ_t4KhnDXx6uAKQONC-mB771NmiO72b-KzpHLEhCNOyY-RVhQOSNJ/exec";
+
+    // 전역 상태 관리
+    const state = {
+      studentId: '',
+      studentName: '',
+      password: '',
+      mindTemp: 36.5,
+      moodIcon: '😊 행복',
+      thankTarget: '친구',
+      fiveWords: '',
+      mailboxReceiver: '',
+      mailboxMessage: ''
+    };
+
+    // 초기화 함수
+    window.addEventListener('DOMContentLoaded', () => {
+      initStudentDropdowns();
+      selectMoodByName('😊 행복');
+      selectTargetByName('친구');
+    });
+
+    // 21001부터 21033까지 학번 및 담임선생님 옵션 생성
+    function initStudentDropdowns() {
+      const studentSelect = document.getElementById('student-id');
+      const receiverSelect = document.getElementById('mailbox-receiver');
+      
+      // 담임선생님 옵션 추가
+      const teacherOpt = document.createElement('option');
+      teacherOpt.value = '담임선생님';
+      teacherOpt.textContent = '👩‍🏫 담임선생님';
+      receiverSelect.appendChild(teacherOpt);
+
+      for (let i = 21001; i <= 21033; i++) {
+        const opt1 = document.createElement('option');
+        opt1.value = i;
+        opt1.textContent = i;
+        studentSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = i;
+        opt2.textContent = i;
+        receiverSelect.appendChild(opt2);
+      }
+    }
+
+    // 1단계: 비밀번호 서버 검증 및 2단계 이동
+    async function handlePasswordVerify() {
+      const idInput = document.getElementById('student-id').value;
+      const nameInput = document.getElementById('student-name').value.trim();
+      const passInput = document.getElementById('auth-password').value.trim();
+      const errorBox = document.getElementById('auth-error');
+      const errorText = document.getElementById('auth-error-text');
+
+      errorBox.classList.add('hidden');
+
+      if (!idInput) {
+        showAuthError('학번을 선택해주세요.');
+        return;
+      }
+      if (!nameInput) {
+        showAuthError('이름을 입력해주세요.');
+        return;
+      }
+      if (!passInput) {
+        showAuthError('오늘의 등교 암호를 입력해주세요.');
+        return;
+      }
+
+      setAuthLoading(true);
+
+      // GAS URL 미설정 시 데모 처리 지원
+      if (!GAS_WEB_APP_URL) {
+        setTimeout(() => {
+          setAuthLoading(false);
+          state.studentId = idInput;
+          state.studentName = nameInput;
+          state.password = passInput;
+          proceedToStep2();
+        }, 600);
+        return;
+      }
+
+      try {
+        // 서버에 암호 검증 요청 (action: verifyOnly)
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'verifyOnly',
+            password: passInput
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          state.studentId = idInput;
+          state.studentName = nameInput;
+          state.password = passInput;
+          proceedToStep2();
+        } else {
+          showAuthError(result.message || '등교 암호가 올바르지 않습니다.');
+        }
+      } catch (err) {
+        console.error(err);
+        showAuthError('서버 통신 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        setAuthLoading(false);
+      }
+    }
+
+    function showAuthError(msg) {
+      const errorBox = document.getElementById('auth-error');
+      const errorText = document.getElementById('auth-error-text');
+      const authCard = document.getElementById('step-auth');
+
+      errorText.textContent = msg;
+      errorBox.classList.remove('hidden');
+      authCard.classList.remove('shake');
+      void authCard.offsetWidth; // Trigger reflow
+      authCard.classList.add('shake');
+    }
+
+    function setAuthLoading(isLoading) {
+      const btnText = document.getElementById('btn-verify-text');
+      const spinner = document.getElementById('btn-verify-spinner');
+      const btn = document.getElementById('btn-verify-pass');
+
+      if (isLoading) {
+        btnText.textContent = '암호 확인 중...';
+        spinner.classList.remove('hidden');
+        btn.disabled = true;
+      } else {
+        btnText.textContent = '비밀번호 확인 및 다음';
+        spinner.classList.add('hidden');
+        btn.disabled = false;
+      }
+    }
+
+    // 2단계 화면으로 전환
+    function proceedToStep2() {
+      document.getElementById('step-auth').classList.add('hidden');
+      document.getElementById('step-form').classList.remove('hidden');
+
+      document.getElementById('display-student-id').textContent = state.studentId;
+      document.getElementById('display-student-name').textContent = state.studentName;
+      document.getElementById('user-avatar-initial').textContent = state.studentName.charAt(0) || '학';
+    }
+
+    function resetToStep1() {
+      document.getElementById('step-form').classList.add('hidden');
+      document.getElementById('step-auth').classList.remove('hidden');
+    }
+
+    // 마음 온도 슬라이더 업데이트
+    function updateTempDisplay(val) {
+      state.mindTemp = parseFloat(val);
+      document.getElementById('temp-display-val').textContent = `${parseFloat(val).toFixed(1)}°C`;
+    }
+
+    // 기분 아이콘 선택
+    function selectMood(element, moodName) {
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.classList.remove('border-rose-500', 'bg-rose-50', 'ring-2', 'ring-rose-300');
+        btn.classList.add('bg-gray-50', 'border-gray-200');
+      });
+
+      element.classList.remove('bg-gray-50', 'border-gray-200');
+      element.classList.add('border-rose-500', 'bg-rose-50', 'ring-2', 'ring-rose-300');
+      state.moodIcon = moodName;
+    }
+
+    function selectMoodByName(moodName) {
+      const moodBtns = document.querySelectorAll('.mood-btn');
+      moodBtns.forEach(btn => {
+        if (btn.textContent.includes(moodName.split(' ')[1] || moodName)) {
+          selectMood(btn, moodName);
+        }
+      });
+    }
+
+    // 감사 대상 선택
+    function selectTarget(element, targetName) {
+      document.querySelectorAll('.target-btn').forEach(btn => {
+        btn.classList.remove('bg-purple-600', 'text-white', 'border-purple-600');
+        btn.classList.add('bg-gray-50', 'text-gray-700', 'border-gray-200');
+      });
+
+      element.classList.remove('bg-gray-50', 'text-gray-700', 'border-gray-200');
+      element.classList.add('bg-purple-600', 'text-white', 'border-purple-600');
+      state.thankTarget = targetName;
+    }
+
+    function selectTargetByName(targetName) {
+      const targetBtns = document.querySelectorAll('.target-btn');
+      targetBtns.forEach(btn => {
+        if (btn.textContent.includes(targetName)) {
+          selectTarget(btn, targetName);
+        }
+      });
+    }
+
+    // 5글자 감사 한마디 검증 함수 (핵심 요구사항: 정확히 5글자)
+    function validateFiveWords(value) {
+      const charBadge = document.getElementById('char-count-badge');
+      const hintText = document.getElementById('five-words-hint');
+      const submitBtn = document.getElementById('btn-submit-attendance');
+
+      const len = value.length;
+      state.fiveWords = value;
+
+      charBadge.textContent = `${len} / 5글자`;
+
+      if (len === 5) {
+        // 정확히 5글자일 때
+        charBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200';
+        hintText.innerHTML = '✅ 완벽합니다! [등교하기] 버튼이 활성화되었습니다.';
+        hintText.className = 'text-xs text-green-600 font-medium';
+        submitBtn.disabled = false;
+      } else {
+        // 5글자가 아닐 때 비활성화
+        charBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 border border-rose-200';
+        if (len < 5) {
+          hintText.innerHTML = `⚠️ 공백 포함 정확히 5글자여야 합니다. (${5 - len}글자 더 필요)`;
+        } else {
+          hintText.innerHTML = `⚠️ 5글자를 초과했습니다. (${len - 5}글자 초과)`;
+        }
+        hintText.className = 'text-xs text-rose-500 font-medium';
+        submitBtn.disabled = true;
+      }
+    }
+
+    // 예시 단어 클릭 적용
+    function applyExample(text) {
+      const input = document.getElementById('five-words-input');
+      input.value = text;
+      validateFiveWords(text);
+    }
+
+    // 최종 등교 제출 함수
+    async function submitAttendance() {
+      const receiver = document.getElementById('mailbox-receiver').value;
+      const message = document.getElementById('mailbox-message').value.trim();
+
+      state.mailboxReceiver = receiver;
+      state.mailboxMessage = message;
+
+      setSubmitLoading(true);
+
+      const payload = {
+        action: 'submit',
+        studentId: state.studentId,
+        name: state.studentName,
+        password: state.password,
+        mindTemp: state.mindTemp,
+        moodIcon: state.moodIcon,
+        thankTarget: state.thankTarget,
+        fiveWords: state.fiveWords,
+        secretTo: state.mailboxReceiver,
+        secretMsg: state.mailboxMessage || '없음'
+      };
+
+      if (!GAS_WEB_APP_URL) {
+        // 데모 시뮬레이션
+        setTimeout(() => {
+          setSubmitLoading(false);
+          showSuccessScreen(new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
+        }, 800);
+        return;
+      }
+
+      try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showSuccessScreen(result.timestamp || new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
+        } else {
+          alert('제출 실패: ' + (result.message || '다시 시도해주세요.'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('서버 전송 중 오류가 발생했습니다.');
+      } finally {
+        setSubmitLoading(false);
+      }
+    }
+
+    function setSubmitLoading(isLoading) {
+      const btnText = document.getElementById('btn-submit-text');
+      const spinner = document.getElementById('btn-submit-spinner');
+      const btn = document.getElementById('btn-submit-attendance');
+
+      if (isLoading) {
+        btnText.textContent = '등교 처리 중...';
+        spinner.classList.remove('hidden');
+        btn.disabled = true;
+      } else {
+        btnText.textContent = '등교하기 ✨';
+        spinner.classList.add('hidden');
+        btn.disabled = false;
+      }
+    }
+
+    // 등교 완료 화면 전환
+    function showSuccessScreen(timeStr) {
+      document.getElementById('step-form').classList.add('hidden');
+      document.getElementById('step-success').classList.remove('hidden');
+
+      document.getElementById('summary-student').textContent = `${state.studentId} ${state.studentName}`;
+      document.getElementById('summary-mood').textContent = `${state.mindTemp.toFixed(1)}°C / ${state.moodIcon}`;
+      document.getElementById('summary-target').textContent = state.thankTarget;
+      document.getElementById('summary-fivewords').textContent = `"${state.fiveWords}"`;
+      document.getElementById('summary-time').textContent = timeStr;
+
+      // 축하 꽃가루 가루 효과
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 60,
+          origin: { y: 0.6 }
+        });
+      } catch(e){}
+    }
+
+    function resetApp() {
+      document.getElementById('auth-password').value = '';
+      document.getElementById('five-words-input').value = '';
+      document.getElementById('mailbox-message').value = '';
+      validateFiveWords('');
+      
+      document.getElementById('step-success').classList.add('hidden');
+      document.getElementById('step-auth').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
